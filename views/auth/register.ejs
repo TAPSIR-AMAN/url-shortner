@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<%- include('../partial/header') %>
+
+
+
+    <div class="container">
+        
+        <!-- LEFT SIDE FORM -->
+        <div class="left">
+            <h1>Sign up</h1>
+
+            <form action="/register" method="POST">
+
+                <div class="input-box">
+                    <input type="text" name="name" placeholder="Your Name">
+                </div>
+
+                <div class="input-box">
+                    <input type="email" name="email" placeholder="Your Email" >
+                </div>
+
+                <div class="input-box">
+                    <input type="password" name="password" placeholder="Password" >
+                </div>
+
+               <% if (errors && errors.length > 0) { %>
+    <% errors.forEach((errors) => { %>
+        <p class="flash-errors"><%= errors %></p>
+    <% }); %>
+<% } %>
+
+
+                <button type="submit" class="register-btn">Register</button>
+
+                <p class="already">I am already member</p>
+
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE IMAGE -->
+        <div class="right">
+            <img src="https://plus.unsplash.com/premium_photo-1669627111416-e06b38981ecf?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG1hbiUyMHdpdGglMjBsYXB0b3B8ZW58MHx8MHx8fDA%3D" alt="Desk Illustration">
+        </div>
+
+    </div>
+<%- include('../partial/footer') %>
+</body>
+</html>

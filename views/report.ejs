@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/views/style.css">
+</head>
+<body>
+    <%- include('header')%>
+   
+    <h1 class="mid">MY STUDENT REPORT CARD</h1>
+      <ul class="report-container">
+
+    <% students.forEach(student => { %>
+      <li class="report-card">
+        <p><strong>Name:</strong> <span><%= student.name %></span></p>
+        <p><strong>Marks:</strong> <span><%= student.marks %></span></p>
+        <p><strong>Percentage:</strong> <span><%= student.percentage %></span></p>
+        <p><strong>CGPA:</strong> <span><%= student.cgpa %></span></p>
+      </li>
+    <% }) %>
+
+      </ul>
+</body>
+</html>
