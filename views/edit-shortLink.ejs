@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <%- include('partial/header') %>
+        <div class="login-status">
+            <% if (user) { %>
+                <h2 class="logged-in">You are logged In</h2>
+                <% } else { %>
+                    <h2 class="logged-out">You are not logged In</h2>
+                    <% } %>
+        </div>
+
+
+        <div class="url-container">
+            <h1>URL Shotend</h1>
+            <form action="/edit/<%=id%>" method="post">
+                <div>
+                    <label for="URL">Enter Url:</label>
+                    <span class="icon">🔗</span>
+                    <input type="url" name="url" id="url" value="<%= url%>">
+                </div>
+                <div>
+                    <label for="shortcode">Enter shortcode:</label>
+                    <span class="icon">
+                        <>
+                    </span>
+                    <input type="text" name="shortcode"  value="<%= shortcode %>"  id="shortcode" >
+                </div>
+                <% if (errors && errors.length> 0) { %>
+                    <% errors.forEach((errors)=> { %>
+                        <p class="flash-errors">
+                            <%= errors %>
+                        </p>
+                        <% }); %>
+                            <% } %>
+                                <button type="submit">Update</button>
+            </form>
+            
+        </div>
+        <%- include('partial/footer') %>
+
+</body>
+
+</html>

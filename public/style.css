@@ -11,7 +11,7 @@
 body {
   background: #f4f7fb;
   color: #222;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* ------------------------------------------------
@@ -54,7 +54,7 @@ body {
 }
 
 /* ------------------------------------------------
-   MAIN CONTAINER (Login + Register + Shortener)
+   MAIN CONTAINER (Login + Register shared)
 --------------------------------------------------*/
 .container {
   width: 90%;
@@ -65,21 +65,17 @@ body {
   border-radius: 18px;
   display: flex;
   overflow: hidden;
-  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.1);
 }
 
-/* ------------------------------------------------
-   SPLIT LEFT + RIGHT
---------------------------------------------------*/
+/* Left & Right columns for login/register */
 .left,
 .right {
   flex: 1;
   padding: 40px;
 }
 
-/* ------------------------------------------------
-   IMAGES (LOGIN + REGISTER) — Smaller & Clean
---------------------------------------------------*/
+/* Images on auth pages */
 .left img,
 .right img {
   width: 100%;
@@ -88,9 +84,7 @@ body {
   margin-top: 30px;
 }
 
-/* ------------------------------------------------
-   FORM TITLES
---------------------------------------------------*/
+/* Titles on auth pages */
 .left h1,
 .right h1 {
   font-size: 2rem;
@@ -98,9 +92,7 @@ body {
   color: #222;
 }
 
-/* ------------------------------------------------
-   INPUT FIELDS
---------------------------------------------------*/
+/* Inputs (auth pages) */
 .input-box {
   margin-bottom: 18px;
 }
@@ -122,9 +114,7 @@ body {
   box-shadow: 0px 0px 8px rgba(76, 143, 251, 0.25);
 }
 
-/* ------------------------------------------------
-   CHECKBOX ROWS
---------------------------------------------------*/
+/* Checkbox rows */
 .terms,
 .remember {
   display: flex;
@@ -140,7 +130,7 @@ body {
 }
 
 /* ------------------------------------------------
-   BUTTONS
+   BUTTONS (shared)
 --------------------------------------------------*/
 button,
 .register-btn,
@@ -163,9 +153,7 @@ button:hover,
   background: #1e6df5;
 }
 
-/* ------------------------------------------------
-   TEXT BELOW BUTTONS
---------------------------------------------------*/
+/* Text under buttons */
 .already,
 .bottom-text {
   text-align: center;
@@ -174,9 +162,7 @@ button:hover,
   font-size: 0.95rem;
 }
 
-/* ------------------------------------------------
-   SOCIAL BUTTON ROW (Invisible minimal)
---------------------------------------------------*/
+/* Social login placeholders */
 .social-login {
   display: flex;
   justify-content: center;
@@ -204,76 +190,59 @@ button:hover,
 }
 
 /* ------------------------------------------------
-   URL SHORTENER PAGE STYLE
+   LOGIN STATUS
 --------------------------------------------------*/
-.container h1 {
-  color: #222;
-  margin-bottom: 25px;
+.login-status {
+  margin: 10px auto;
+  text-align: center;
 }
 
-.container form div {
-  margin-bottom: 15px;
+.logged-in {
+  color: #0a8a0a;
+  background: rgba(0, 200, 0, 0.1);
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 18px;
+  border: 1px solid rgba(0, 200, 0, 0.3);
+  width: fit-content;
+  margin: auto;
 }
 
-.container label {
-  font-weight: 600;
-}
-
-.container input[type="url"],
-.container input[type="text"] {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid #cdd4e0;
-  background: #f9fafe;
-}
-
-.container button {
-  margin-top: 10px;
-}
-
-#shortend-url {
-  list-style: none;
-  margin-top: 30px;
-}
-
-#shortend-url li {
-  padding: 12px;
-  background: #f2f4f8;
-  border-radius: 10px;
-  margin-bottom: 10px;
-}
-
-#shortend-url li a {
-  color: #4c8ffb;
-  text-decoration: none;
-  font-weight: 600;
+.logged-out {
+  color: #cc0000;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 12px 15px;
+  border-radius: 6px;
+  font-size: 18px;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  width: fit-content;
+  margin: auto;
 }
 
 /* ------------------------------------------------
-   RESPONSIVE DESIGN
+   FLASH ERRORS
 --------------------------------------------------*/
-@media (max-width: 900px) {
-  .container {
-    flex-direction: column;
-  }
-
-  .left,
-  .right {
-    padding: 25px;
-  }
+.flash-errors {
+  background: #ffe6e6;
+  color: #cc0000;
+  padding: 12px 16px;
+  margin: 10px 0;
+  border-left: 4px solid #cc0000;
+  border-radius: 6px;
+  font-size: 15px;
 }
-/* ==================================================
-   URL SHORTENER PAGE — SEPARATE CLEAN LAYOUT
-=====================================================*/
+
+/* ------------------------------------------------
+   URL SHORTENER MAIN BOX
+--------------------------------------------------*/
 .url-container {
   width: 90%;
   max-width: 1100px;
-  margin: 50px auto;
+  margin: 20px auto;
   background: #ffffff;
   padding: 40px;
   border-radius: 18px;
-  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.10);
+  box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .url-container h1 {
@@ -282,11 +251,7 @@ button:hover,
   color: #222;
 }
 
-.url-container form {
-  margin-bottom: 30px;
-  max-width: 400px;
-}
-
+/* Form inside URL container */
 .url-container form div {
   margin-bottom: 16px;
 }
@@ -299,7 +264,7 @@ button:hover,
   background: #f9fafe;
 }
 
-.url-container button {
+.url-container button .shortner-btn{
   padding: 12px;
   width: 100%;
   border-radius: 10px;
@@ -309,29 +274,99 @@ button:hover,
   border: none;
   cursor: pointer;
   transition: 0.2s;
+  margin-top: 10px;
 }
 
-.url-container button:hover {
+.url-container button .shortner-btn:hover {
   background: #1e6df5;
 }
 
-.url-list {
+/* ------------------------------------------------
+URL LIST
+--------------------------------------------------*/
+#shortend-url {
+  list-style: none;
   margin-top: 25px;
 }
 
-#shortend-url {
-  list-style: none;
-}
-
-#shortend-url li {
-  padding: 15px;
-  border-radius: 12px;
-  background: #f2f4f8;
+.url-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f1f4f9;
+  padding: 16px 20px;
+  border-radius: 14px;
   margin-bottom: 12px;
 }
 
-#shortend-url a {
-  color: #4c8ffb;
+/* Left side: link + truncated URL */
+.url-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.url-main-link {
+  color: #1d6df7;
   font-weight: 600;
   text-decoration: none;
+}
+
+.url-main-link:hover {
+  text-decoration: underline;
+}
+
+.url-text {
+  color: #444;
+}
+
+/* ------------------------------------------------
+ACTION BUTTONS (EDIT + DELETE)
+--------------------------------------------------*/
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  text-decoration: none;
+  color: white;
+  background: transparent;
+}
+
+.edit-btn:hover{
+  
+  background: #1e6df5;
+}
+.delete-form {
+  margin: 0;
+}
+
+/* ------------------------------------------------
+RESPONSIVE
+--------------------------------------------------*/
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .left,
+  .right {
+    padding: 25px;
+  }
+
+  .url-container {
+    padding: 25px;
+  }
 }

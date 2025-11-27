@@ -1,0 +1,181 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>404 — Page not found</title>
+
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: #081025;
+      --muted: #94a3b8;
+      --accent: #60a5fa;
+      --glass: rgba(255,255,255,0.04);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #071023 0%, #051025 60%);
+      color: #e6eef8;
+      line-height:1.4;
+    }
+
+    .not-found{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:32px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .content{
+      z-index:2;
+      max-width:1100px;
+      width:100%;
+      display:flex;
+      gap:28px;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border-radius:18px;
+      box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    .code{
+      font-weight:800;
+      font-size:clamp(72px, 12vw, 160px);
+      line-height:0.9;
+      letter-spacing:-6px;
+      color:transparent;
+      -webkit-text-stroke: 2px rgba(255,255,255,0.06);
+      text-shadow:0 6px 18px rgba(2,6,23,0.7);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-width:160px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .message{ max-width:560px; }
+
+    .message h1{
+      margin:0 0 8px 0;
+      font-size:clamp(20px,4vw,34px);
+      color:#f1f7ff;
+    }
+
+    .message p{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:clamp(14px,2.4vw,16px);
+    }
+
+    .actions{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      text-decoration:none;
+      padding:10px 16px;
+      border-radius:10px;
+      background:linear-gradient(90deg,#3b82f6,#60a5fa);
+      color:white;
+      font-weight:600;
+      transition: transform .14s ease;
+    }
+
+    .btn:hover{ transform:translateY(-4px); }
+
+    .link{
+      color:var(--muted);
+      text-decoration:underline;
+      font-size:14px;
+    }
+
+    .scene{
+      position:absolute;
+      right:-10%;
+      bottom:-10%;
+      width:70%;
+      max-width:900px;
+      opacity:0.6;
+      filter: blur(6px);
+      pointer-events:none;
+    }
+
+    @media (max-width:720px){
+      .content{
+        flex-direction:column;
+        gap:18px;
+        padding:20px;
+      }
+      .code{
+        font-size:96px;
+        min-width:unset;
+      }
+      .scene{
+        width:120%;
+        right:-20%;
+        bottom:-30%;
+        opacity:0.45;
+      }
+    }
+
+    @keyframes float{
+      0%{ transform: translateY(0) }
+      50%{ transform: translateY(-6px) }
+      100%{ transform: translateY(0) }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="not-found">
+    <div class="content">
+      <div class="code">404</div>
+
+      <div class="message">
+        <h1>Page not found</h1>
+        <p>The page you are looking for may have been removed or moved.</p>
+
+        <div class="actions">
+          <a class="btn" href="/">Go Home</a>
+          <a class="link" href="/" target="_blank">Go Back</a>
+        </div>
+      </div>
+    </div>
+
+    <svg class="scene" viewBox="0 0 800 400">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1">
+          <stop offset="0" stop-color="#f6d365"/>
+          <stop offset="1" stop-color="#fda085"/>
+        </linearGradient>
+      </defs>
+
+      <rect width="100%" height="100%" fill="#0f1724"></rect>
+
+      <g transform="translate(0,40)">
+        <circle cx="600" cy="60" r="40" fill="url(#g)"></circle>
+
+        <path d="M0 300 L160 160 L320 300 Z" fill="#1f2937"></path>
+        <path d="M280 300 L420 150 L560 300 Z" fill="#111827"></path>
+        <path d="M520 300 L700 170 L900 300 Z" fill="#0b1220"></path>
+      </g>
+    </svg>
+  </main>
+
+  <!-- <h1 style="text-align: center;"><a href="/">Go to home page</a></h1> -->
+</body>
+</html>

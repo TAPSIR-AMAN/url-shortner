@@ -1,38 +1,44 @@
 import crypto from "crypto";
-import {loadLinks,saveLinks} from "../model/shorten.module.js";
-import {getAllShortLinks, getshortlinksbyShortcode, insertingurl} from "../service/shortner.service.js"
-import { log } from "console";
+import { loadLinks, saveLinks } from "../model/shorten.module.js";
+import { getAllShortLinks, getshortlinksbyShortcode, insertingurl, findShortLinkbyId, updateshortcode, deleteShortcodebyId } from "../service/shortner.service.js"
+import z from "zod";
 
-export const getshortner =async(req,res)=>{
+export const getshortner = async (req, res) => {
     try {
-        if(!req.user) return res.redirect("/login")
-        const links=await getAllShortLinks(req.user.id)
+        if (!req.user) return res.redirect("/login")
+        const links = await getAllShortLinks(req.user.id)
 
-        return res.render("index",{links,host:req.host})
-        
+        return res.render("index", { links, host: req.host, errors: req.flash("errors") })
+
     } catch (error) {
         console.error(error)
         return res.status(500).send("internal server error")
-        
+
     }
 }
-export const postUrlShortner=async(req,res)=>{
+export const postUrlShortner = async (req, res) => {
     try {
-        if(!req.user) return res.redirect("/login")
+        if (!req.user) return res.redirect("/login")
         const { url, shortcode } = req.body;
-        const finalShortcode=shortcode || crypto.randomBytes(4).toString("hex")
-        
-        // const links=await loadLinks()
-        const links=await getshortlinksbyShortcode(finalShortcode)
+        const finalShortcode = shortcode || crypto.randomBytes(4).toString("hex")
 
-        if(links){
-            return res.status(404).send("Shortcode already exists please choose another")
-            
+        // const links=await loadLinks()
+        const links = await getshortlinksbyShortcode(finalShortcode)
+
+        if (links) {
+            // return res.status(404).send("Shortcode already exists please choose another")
+            req.flash(
+                "errors",
+                "URL with that shortcode already exists, please choose another"
+            );
+            return res.redirect("/");
+
+
         }
         // links[finalShortcode]=newUrl;
         // await saveLinks(links)
 
-        await insertingurl({url,finalShortcode,userId:req.user.id})
+        await insertingurl({ url, finalShortcode, userId: req.user.id })
         return res.redirect("/")
     } catch (error) {
         console.error("POST Error:", error);  // <-- SEE THE ERROR
@@ -40,16 +46,74 @@ export const postUrlShortner=async(req,res)=>{
     }
 }
 
-export const redirectToShortlink=async(req,res)=>{
+export const redirectToShortlink = async (req, res) => {
     try {
-        const {shortcode}=req.params
-        const links=await getshortlinksbyShortcode(shortcode)
+        const { shortcode } = req.params
+        const links = await getshortlinksbyShortcode(shortcode)
 
-        if(!links) return res.status(404).send("404 error occured")
-            
+        if (!links) return res.status(404).send("404 error occured")
+
         return res.redirect(links.url)
-        } catch (error) {
-            console.error(error)
-            return res.status(500).send("internal server error")
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send("internal server error")
+    }
+}
+export const getShortnerEditPage = async (req, res) => {
+    if (!req.user) return res.redirect("/login")
+    // const id=req.params;
+    const { data: id, error } = z.coerce.number().int().safeParse(req.params.id)
+    if (error) return res.redirect("/404")
+    try {
+        const shortLinks = await findShortLinkbyId(id)
+
+        if (!shortLinks) return res.redirect("/404")
+
+        res.render("edit-shortLink", {
+            id: shortLinks.id,
+            url: shortLinks.url,
+            shortcode: shortLinks.shortCode,
+            errors: req.flash("errors")
+        })
+
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send("internal server error")
+    }
+}
+
+export const postShortnerEditPage = async (req, res) => {
+    if (!req.user) return res.redirect("/login")
+    // const id=req.params;
+    const { data: id, error } = z.coerce.number().int().safeParse(req.params.id)
+    if (error) return res.redirect("/404")
+
+    try {
+        const { url, shortcode } = req.body;
+
+        const newUpdatedShortcode = await updateshortcode({ id, url, shortcode })
+
+        if (!newUpdatedShortcode) return res.redirect("/404")
+        res.redirect("/")
+    } catch (error) {
+        if (error.code === "ER_DUP_ENTRY" || error.cause?.code === "ER_DUP_ENTRY") {
+            req.flash("errors", "Shortcode already exists, please choose another");
+            return res.redirect(`/edit/${id}`);
         }
+        
+        return res.status(500).send("internal server error")
+    }
+}
+export const deleteShortcode = async (req, res) => {
+    try {
+        const { data: id, error } = z.coerce.number().int().safeParse(req.params.id)
+        if (error) return res.redirect("/404")
+        
+        await deleteShortcodebyId(id)
+        res.redirect("/")
+        
+    } catch (error) {
+        console.error(error)
+        return res.status(500).send("internal server error")
+    }
 }

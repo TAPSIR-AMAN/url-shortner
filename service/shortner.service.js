@@ -18,3 +18,13 @@ export const insertingurl=async({url,finalShortcode,userId})=>{
         url,shortCode:finalShortcode,userId
     })
 }
+export const findShortLinkbyId=async(id)=>{
+    const [result]= await db.select().from(shortLink).where(eq(shortLink.id, id))
+    return result;
+}
+export const updateshortcode=async({id,url,shortcode})=>{
+    return await db.update(shortLink).set({url,shortCode:shortcode}).where(eq(shortLink.id,id));
+}
+export const deleteShortcodebyId=async(id)=>{
+     return await db.delete(shortLink).where(eq(shortLink.id,id))
+}
