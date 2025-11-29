@@ -1,5 +1,18 @@
 
-import { comparePassword, createUser, generateToken, getUserbyemail, hashpassword } from "../service/auth.services.js";
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
+import {
+    authenticateUser,
+    clearSession,
+    comparePassword,
+    createAccessToken,
+    createRefreshToken,
+    createSession,
+    createUser,
+    findUserById,
+    getAllShortLinks,
+    getUserbyemail,
+    hashpassword
+} from "../service/auth.services.js";
 import { loginUserSchema, registerUserSchema } from "../validators/auth-validator.js";
 
 
@@ -19,7 +32,7 @@ export const postRegisterpage = async (req, res) => {
     if (error) {
         const errors = error.issues[0].message
         req.flash("errors", errors);
-        res.redirect("/register")
+        return res.redirect("/register")
     }
     const { name, email, password } = data
     const userExists = await getUserbyemail(email)
@@ -30,23 +43,24 @@ export const postRegisterpage = async (req, res) => {
         return res.redirect("/register")
     }
     const hashedpassword = await hashpassword(password)
-    const [users] = await createUser({ name, email, password: hashedpassword })
+    const [user] = await createUser({ name, email, password: hashedpassword })
     // console.log(users);
 
     // console.log(req.body);
-    res.redirect("/login")
+    // res.redirect("/login")
+    await authenticateUser({ req, res, user, name, email })
+    res.redirect('/');
 
 }
 export const getLoginpage = (req, res) => {
     if (req.user) return res.redirect("/")
-    return res.render("./auth/login",{ errors: req.flash("errors") })
+    return res.render("./auth/login", { errors: req.flash("errors") })
 
 }
 export const postLogin = async (req, res) => {
     if (req.user) return res.redirect("/")
     const { data, error } = loginUserSchema.safeParse(req.body)
     // console.log(data);
-
     if (error) {
         const errors = error.issues[0].message
         req.flash("errors", errors);
@@ -70,25 +84,49 @@ export const postLogin = async (req, res) => {
         req.flash("errors", "Invalid Email and Password")
         return res.redirect("/login");
     }
-    // res.setHeader('Set-Cookie',"isLoggedIn=true;path=/;")
-    // res.cookie("isLoggedIn",true);
-    const token = await generateToken({
-        id: user.id,
-        name: user.name,
-        email: user.email
-    })
-    res.cookie("access_token", token)
-    // console.log(token);
 
+    await authenticateUser({ req, res, user })
     res.redirect('/');
 
 }
+
 export const getme = (req, res) => {
     if (!req.user) return res.send("not logged in");
     return res.send(`<h1>Hey ${req.user.name}-${req.user.email} `)
 }
 
-export const loggedoutuser = (req, res) => {
+export const loggedoutuser = async (req, res) => {
+    await clearSession(req.user.sessionId)
+
     res.clearCookie("access_token")
-    res.redirect('/login')
+    res.clearCookie("Refresh_token")
+    return res.redirect('/login')
+}
+
+export const getProfilePage = async (req, res) => {
+    if (!req.user) return res.send("not logged in");
+    const user = await findUserById(req.user.id);
+    if (!user) return res.redirect("/login");
+    
+    const usersShortlink = await getAllShortLinks(user.id)
+    // console.log(user);
+    
+    return res.render("auth/profile", {
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            createdAt:user.createdAt,
+            links:usersShortlink,
+            isEmailValid:user.isEmailValid,
+        }
+    })
+}
+
+export const getVerifyEmailPage = async (req, res) => {
+    if (!req.user) return res.redirect("/");
+    const user =await findUserById(req.user.id)
+    if(!user || user.isEmailValid) return res.redirect("/")
+
+    return res.render("auth/verify_email",{email:req.user.email})
 }

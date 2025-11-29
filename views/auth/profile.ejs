@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+<%- include('../partial/header') %>
+
+<div class="profile-container">
+
+    <!-- Login Status -->
+    <div class="login-status">
+        <% if (user) { %>
+            <div class="status-box success">✔ You are logged In</div>
+        <% } else { %>
+            <div class="status-box danger">✖ You are not logged In</div>
+        <% } %>
+    </div>
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+
+        <!-- TOP SECTION: AVATAR + USER DETAILS -->
+        <div class="profile-top">
+            <div class="avatar">
+                <%= user.name.charAt(0).toUpperCase() %>
+            </div>
+
+            <div class="user-info">
+                <h3><%= user.name %></h3>
+                <p class="email">📧 <%= user.email %></p>
+                <p class="member"><%= new Date(user.createdAt).toLocaleDateString("en-IN") %></p>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- STATS SECTION -->
+        <div class="profile-stats">
+
+            <div class="stat">
+                <h4><%= user.links ? user.links.length : 0 %></h4>
+                <p>LINKS CREATED</p>
+            </div>
+
+            <div class="stat">
+                <h4><%= user.clicks?1:0 %></h4>
+                <p>TOTAL CLICKS</p>
+            </div>
+
+            <div class="stat">
+                <h4><%= user.lastActive?1:0 %></h4>
+                <p>LAST ACTIVE</p>
+            </div>
+
+        </div>
+
+        <hr class="divider">
+
+        <!-- EMAIL VERIFICATION -->
+        <div class="verify-section">
+            <p>Email Verification:</p>
+
+            <% if (user.isEmailValid) { %>
+                <span class="verified">✔ Verified</span>
+            <% } else { %>
+                <span class="not-verified">✖ Not Verified</span>
+                <a class="verify-btn" href="/verify-email">Verify Now</a>
+            <% } %>
+        </div>
+
+        <hr class="divider">
+
+        <!-- ACTION BUTTONS -->
+        <div class="profile-actions">
+            <a href="/edit-profile" class="btn">✏ Edit Profile</a>
+            <a href="/change-password" class="btn">🔑 Change Password</a>
+            <a href="/logout" class="btn danger">🚪 Logout</a>
+        </div>
+
+    </div>
+</div>
+<%- include('../partial/footer') %>
+
+</body>
+</html>

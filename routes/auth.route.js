@@ -19,6 +19,9 @@ router
 router.route("/me")
 .get(authControllers.getme)
 
+router.route("/profile").get(authControllers.getProfilePage)
+router.route("/verify-email").get(authControllers.getVerifyEmailPage)
+
 router.route("/logout").get(authControllers.loggedoutuser)
 
 

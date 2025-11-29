@@ -1,13 +1,14 @@
-import express from "express"
-import path from "path"
-// import router from "./routes/shortner.route.js";
-import { shortnerRoute } from "./routes/shortner.route.js";
-import { authRoutes } from "./routes/auth.route.js";
-
-import cookieParser from "cookie-parser";
-import { verifyAuthentication } from "./middlewares/verify-auth-middleware.js";
-import session from "express-session";
 import flash from "connect-flash";
+import express from "express"
+import cookieParser from "cookie-parser";
+import path from "path"
+import requestIp from "request-ip";
+import session from "express-session";
+// import router from "./routes/shortner.route.js";
+import { authRoutes } from "./routes/auth.route.js";
+import { shortnerRoute } from "./routes/shortner.route.js";
+import { verifyAuthentication } from "./middlewares/verify-auth-middleware.js";
+
 
 const app=express()
 
@@ -27,8 +28,12 @@ app.use(
     session({secret:"my-secret",resave:true,saveUninitialized:false})
 )
 app.use(flash())
+
+app.use(requestIp.mw())
+
 // this must be after cookieParser
 app.use(verifyAuthentication);
+
 app.use((req,res,next)=>{
     res.locals.user=req.user
     return next()
