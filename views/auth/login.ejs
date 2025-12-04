@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,49 +11,66 @@
 <body>
     <%- include('../partial/header') %>
 
-    <div class="container">
+        <div class="container">
 
-        <!-- LEFT IMAGE -->
-        <div class="left">
-            <img src="https://plus.unsplash.com/premium_photo-1669627111416-e06b38981ecf?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG1hbiUyMHdpdGglMjBsYXB0b3B8ZW58MHx8MHx8fDA%3D" alt="Login Illustration">
+            <!-- LEFT IMAGE -->
+            <div class="left">
+                <img src="https://plus.unsplash.com/premium_photo-1669627111416-e06b38981ecf?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTN8fG1hbiUyMHdpdGglMjBsYXB0b3B8ZW58MHx8MHx8fDA%3D"
+                    alt="Login Illustration">
+            </div>
+
+            <!-- RIGHT FORM -->
+            <div class="right">
+                <h1>Sign in</h1>
+
+                <form action="/login" method="POST">
+
+                    <div class="input-box">
+                        <input type="text" name="email" placeholder="enter your email">
+                    </div>
+
+                    <div class="input-box">
+                        <input type="password" name="password" placeholder="Password">
+                    </div>
+
+                    <% if (errors && errors.length> 0) { %>
+                        <% errors.forEach((errors)=> { %>
+                            <p class="flash-errors">
+                                <%= errors %>
+                            </p>
+                            <% }); %>
+                                <% } %>
+
+                                    <button type="submit" class="login-btn">Log in</button>
+
+                                    <div class="forgot-password-link">
+                                        <a href="/reset-password">Forgot password?</a>
+                                    </div>
+
+                                    <p class="bottom-text">Create an account</p>
+
+                                    <div class="social-login">
+
+                                        <a href="/google" class="social-btn google">
+                                            <div class="google-icon"></div>
+                                        </a>
+
+                                        <a href="/auth/facebook" class="social-btn facebook">
+                                            <div class="facebook-icon"></div>
+                                        </a>
+
+                                        <a href="/github" class="social-btn github">
+                                            <div class="github-icon"></div>
+                                        </a>
+
+                                    </div>
+
+
+                </form>
+            </div>
+
         </div>
-
-        <!-- RIGHT FORM -->
-        <div class="right">
-            <h1>Sign in</h1>
-
-            <form action="/login" method="POST">
-
-                <div class="input-box">
-                    <input type="text" name="email" placeholder="enter your email" >
-                </div>
-
-                <div class="input-box">
-                    <input type="password" name="password" placeholder="Password">
-                </div>
-
-                 <% if (errors && errors.length> 0) { %>
-                <% errors.forEach((errors)=> { %>
-                    <p class="flash-errors">
-                        <%= errors %>
-                    </p>
-                    <% }); %>
-                        <% } %>
-
-                <button type="submit" class="login-btn">Log in</button>
-
-                <p class="bottom-text">Create an account</p>
-
-                <div class="social-login">
-                    <div class="fb"></div>
-                    <div class="tw"></div>
-                    <div class="gg"></div>
-                </div>
-
-            </form>
-        </div>
-
-    </div>
-<%- include('../partial/footer') %>
+        <%- include('../partial/footer') %>
 </body>
+
 </html>

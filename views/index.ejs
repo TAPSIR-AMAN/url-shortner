@@ -13,73 +13,146 @@
     <!-- Header -->
     <%- include('partial/header') %>
 
-    <!-- Login Status -->
-    <div class="login-status">
-        <% if (user) { %>
-            <h2 class="logged-in">You are logged In</h2>
-        <% } else { %>
-            <h2 class="logged-out">You are not logged In</h2>
-        <% } %>
-    </div>
+        <!-- Login Status -->
+        <div class="login-status">
+            <% if (user) { %>
+                <h2 class="logged-in">You are logged In</h2>
+                <% } else { %>
+                    <h2 class="logged-out">You are not logged In</h2>
+                    <% } %>
+        </div>
 
-    <!-- URL Shortener Container -->
-    <div class="url-container">
-        <h1>URL Shortener</h1>
+        <!-- URL Shortener Container -->
+        <div class="url-container">
+            <h1>URL Shortener</h1>
 
-        <form action="/" method="post" class="shorten-form">
-            <div>
-                <label for="URL">Enter Url:</label>
-                <input type="url" name="url" id="url">
-            </div>
+            <form action="/" method="post" class="shorten-form">
+                <div>
+                    <label for="URL">Enter Url:</label>
+                    <input type="url" name="url" id="url">
+                </div>
 
-            <div>
-                <label for="shortcode">Enter shortcode:</label>
-                <input type="text" name="shortcode" id="shortcode">
-            </div>
+                <div>
+                    <label for="shortcode">Enter shortcode:</label>
+                    <input type="text" name="shortcode" id="shortcode">
+                </div>
 
-            <!-- Flash Errors -->
-            <% if (errors && errors.length > 0) { %>
-                <% errors.forEach((err) => { %>
-                    <p class="flash-errors"><%= err %></p>
-                <% }) %>
-            <% } %>
+                <!-- Flash Errors -->
+                <% if (errors && errors.length> 0) { %>
+                    <% errors.forEach((err)=> { %>
+                        <p class="flash-errors">
+                            <%= err %>
+                        </p>
+                        <% }) %>
+                            <% } %>
 
-            <button type="submit" class="shortner-btn">Shorten</button>
-        </form>
+                                <button type="submit" class="shortner-btn">Shorten</button>
+            </form>
 
-        <h2>Shortened URLs</h2>
+            <h2>Shortened URLs</h2>
 
-        <ul id="shortend-url">
-            <% links.map(({ shortCode, url, id }) => { %>
-                <% const truncatedUrl = url.length > 30 ? url.slice(0, 30) + "..." : url; %>
+            <ul id="shortend-url">
+                <% links.map(({ shortCode, url, id })=> { %>
+                    <% const truncatedUrl=url.length> 30 ? url.slice(0, 30) + "..." : url; %>
 
-                <li class="url-item">
-                    <div class="url-left">
-                        <a href="/<%= shortCode %>" target="_blank" class="url-main-link">
-                            <%= host %>/<%= shortCode %>
-                        </a>
-                        <span class="url-dash">–</span>
-                        <span class="url-text"><%= truncatedUrl %></span>
-                    </div>
+                        <li class="url-item">
+                            <div class="url-left">
+                                <a href="/<%= shortCode %>" target="_blank" class="url-main-link">
+                                    <%= host %>/<%= shortCode %>
+                                </a>
+                                <span class="url-dash">–</span>
+                                <span class="url-text">
+                                    <%= truncatedUrl %>
+                                </span>
+                            </div>
 
-                    <div class="action-buttons">
-                        <!-- Edit -->
-                        <a href="/edit/<%= id %>" class="icon-btn edit-btn">✏️</a>
+                            <div class="action-buttons">
+                                <!-- Edit -->
+                                <a href="/edit/<%= id %>" class="icon-btn edit-btn">✏️</a>
 
-                        <!-- Delete -->
-                        <form action="/delete/<%= id %>" method="POST" class="delete-form">
-                            <button class="icon-btn delete-btn">🗑️</button>
-                        </form>
-                    </div>
-                </li>
+                                <!-- Delete -->
+                                <form action="/delete/<%= id %>" method="POST" class="delete-form">
+                                    <button class="icon-btn delete-btn">🗑️</button>
+                                </form>
+                            </div>
+                        </li>
 
-            <% }) %>
-        </ul>
+                        <% }) %>
+            </ul>
 
-    </div>
+        </div>
 
-    <!-- Footer -->
-    <%- include('partial/footer') %>
+       <% if (totalPages > 1) { %>
+  <div class="pagination">
+
+    <%# Previous page link %>
+    <% if (currentPage > 1) { %>
+      <a href="?page=<%= currentPage - 1 %>" class="page-link">
+        &laquo; Previous
+      </a>
+    <% } else { %>
+      <span class="page-link disabled">&laquo; Previous</span>
+    <% } %>
+
+    <% 
+      let startPage = Math.max(1, currentPage - 2); 
+      let endPage = Math.min(totalPages, currentPage + 2); 
+      while (endPage - startPage < 4 && startPage > 1) {
+             startPage--;
+            }
+
+      while (endPage - startPage < 4 && endPage < totalPages) {
+             endPage++;
+            }
+
+    %>
+
+    <%# First page link + left ellipsis %>
+    <% if (startPage > 1) { %>
+      <a href="?page=1" class="page-link">1</a>
+
+      <% if (startPage > 2) { %>
+        <span class="ellipsis">...</span>
+      <% } %>
+    <% } %>
+
+    <%# Middle pages %>
+    <% for (let i = startPage; i <= endPage; i++) { %>
+      <% if (i === currentPage) { %>
+        <span class="page-link current"><%= i %></span>
+      <% } else { %>
+        <a href="?page=<%= i %>" class="page-link"><%= i %></a>
+      <% } %>
+    <% } %>
+
+    <%# Right ellipsis + last page %>
+    <% if (endPage < totalPages) { %>
+
+      <% if (endPage < totalPages - 1) { %>
+        <span class="ellipsis">...</span>
+      <% } %>
+
+      <a href="?page=<%= totalPages %>" class="page-link">
+        <%= totalPages %>
+      </a>
+
+    <% } %>
+
+    <%# Next page link %>
+    <% if (currentPage < totalPages) { %>
+      <a href="?page=<%= currentPage + 1 %>" class="page-link">
+        Next &raquo;
+      </a>
+    <% } else { %>
+      <span class="page-link disabled">Next &raquo;</span>
+    <% } %>
+
+  </div>
+<% } %>
+
+
+                <!-- Footer -->
+                <%- include('partial/footer') %>
 
 </body>
 

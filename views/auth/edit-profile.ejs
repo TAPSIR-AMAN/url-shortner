@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <%- include('../partial/header') %>
+        <div class="profile-container">
+            <% if (user) { %>
+                <div class="cp-alert cp-alert-success">
+                    <i class="fa-solid fa-circle-check"></i>
+                    You are logged in
+                </div>
+                <% } %>
+
+
+
+                    <h2 class="profile-title">Edit Your Profile</h2>
+                    <div class="title-underline"></div>
+
+                    <form action="/edit-profile" method="POST" enctype="multipart/form-data">
+                        <div class="avatar-upload">
+
+  <div class="avatar-preview">
+    <% if (avatarUrl) { %>
+      <img src="<%= avatarUrl %>" alt="Current profile picture" id="avatar-preview-img" class="fade-in">
+    <% } else { %>
+      <div class="avatar-placeholder" id="avatar-placeholder">
+        <i class="fas fa-user"></i>
+      </div>
+      <img src="" alt="Preview" id="avatar-preview-img" style="display: none;">
+    <% } %>
+  </div>
+
+  <div class="avatar-edit">
+    <label for="avatar" class="avatar-upload-btn">
+      <i class="fas fa-camera"></i> Change Photo
+    </label>
+
+    <input type="file" id="avatar" name="avatar" accept="image/*">
+
+    <% if (avatarUrl) { %>
+      <button type="button" id="remove-avatar" class="remove-avatar-btn">
+        <i class="fas fa-trash"></i> Remove
+      </button>
+    <% } %>
+  </div>
+
+</div>
+
+                        <div class="input-wrapper">
+                            <span class="icon">👤</span>
+                            <input type="text" name="name" value="<%= name %>" />
+                        </div>
+                        <% if (errors && errors.length> 0) { %>
+                            <% errors.forEach(err=> { %>
+                                <div class="alert-error">
+                                    <%= err %>
+                                </div>
+                                <% }) %>
+                                    <% } %>
+                                        <button class="btn-submit">Save Changes</button>
+                    </form>
+
+        </div>
+
+
+
+        <%- include('../partial/footer') %>
+<script>
+  // Preview uploaded image
+  document.getElementById("avatar").addEventListener("change", function (e) {
+    const file = e.target.files[0];
+
+    if (file) {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const avatarPreviewImg = document.getElementById("avatar-preview-img");
+        avatarPreviewImg.src = event.target.result;
+        avatarPreviewImg.style.display = "block";
+
+        const placeholder = document.getElementById("avatar-placeholder");
+        if (placeholder) placeholder.style.display = "none";
+      };
+
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // Remove avatar button
+  const removeAvatarBtn = document.getElementById("remove-avatar"); // <-- FIX
+
+  if (removeAvatarBtn) {
+    removeAvatarBtn.addEventListener("click", function () {
+      // Add hidden input to indicate avatar removal
+      const hiddenInput = document.createElement("input");
+      hiddenInput.type = "hidden";
+      hiddenInput.name = "removeAvatar";
+      hiddenInput.value = "true";
+      document.querySelector("form").appendChild(hiddenInput);
+
+      // Update UI
+      document.getElementById("avatar-preview-img").style.display = "none";
+
+      // Create placeholder if missing
+      let placeholder = document.getElementById("avatar-placeholder");
+      if (!placeholder) {
+        placeholder = document.createElement("div");
+        placeholder.id = "avatar-placeholder";
+        placeholder.className = "avatar-placeholder";
+        placeholder.innerHTML = `<i class="fas fa-user"></i>`;
+        document.querySelector(".avatar-preview").appendChild(placeholder);
+      }
+
+      placeholder.style.display = "flex";
+
+      // Reset file input
+      document.getElementById("avatar").value = "";
+    });
+  }
+</script>
+
+
+</body>
+
+</html>
